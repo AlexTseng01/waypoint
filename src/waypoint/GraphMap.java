@@ -1,12 +1,7 @@
 package waypoint;
 
 import java.util.List;
-
-import graph_practice.GenericGraph.Edge;
-import graph_practice.GenericGraph.Node;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class GraphMap<T> {
 	class Node {
@@ -48,18 +43,18 @@ public class GraphMap<T> {
 	}
 	
 	public Node addNode(T data) {
-		
+		return null;
 	}
 	
 	public Node removeNode(T data) {
-
+		return null;
 	}
 	
 	public Node findNode(T data) {
-
+		return null;
 	}
 	
 	public List<Edge> adjacentNodes(T data) {
-		
+		return null;
 	}
 }
