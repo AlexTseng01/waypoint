@@ -2,6 +2,8 @@ package waypoint;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class GraphMap<T> {
 	class Node {
@@ -22,39 +24,39 @@ public class GraphMap<T> {
 		}
 	}
 	
-	private List<Node> nodes;
-	private int size;
+	private Map<T, Node> nodes;
 	
 	public GraphMap() {
-		this.nodes = new ArrayList<>();
-		this.size = 0;
+		this.nodes = new HashMap<>();
 	}
 	
-	public int getSize() {return this.size;}
+	public int getSize() {return this.nodes.size();}
 	
-	public List<Node> getNodes() {return this.nodes;}
+	public List<Edge> getEdges(T data) {return (this.nodes.get(data) != null) ? this.nodes.get(data).edges : null;}
 	
-	public void addEdgeDirected(Node target, Node destination, double distance) {
-		
+	public Map<T, Node> getNodes() {return this.nodes;}
+	
+	public void addEdgeDirected(Node source, Node destination, double distance) {
+		source.edges.add(new Edge(destination, distance));
 	}
 	
-	public void addEdgeUndirected(Node target, Node destination, double weight) {
-		
+	public void addEdgeUndirected(Node source, Node destination, double distance) {
+		source.edges.add(new Edge(destination, distance));
+		destination.edges.add(new Edge(source, distance));
 	}
 	
-	public Node addNode(T data) {
-		return null;
-	}
+	public void addNode(T data) {nodes.putIfAbsent(data, new Node(data));}
 	
 	public Node removeNode(T data) {
-		return null;
-	}
-	
-	public Node findNode(T data) {
-		return null;
-	}
-	
-	public List<Edge> adjacentNodes(T data) {
-		return null;
+		Node nodeToRemove = new Node(data);
+		for (Map.Entry<T, Node> node : nodes.entrySet()) {
+			Node temp = node.getValue();
+			if (node == nodeToRemove) continue;
+			temp.edges.removeIf(edge -> edge.target == nodeToRemove);
+		}
+		
+		nodeToRemove.edges.clear();
+		nodes.remove(data);
+		return nodeToRemove;
 	}
 }
