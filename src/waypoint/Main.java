@@ -1,3 +1,7 @@
+// Open Powershell
+// Enter project directory 'PS C:\JavaProjects\waypoint>'
+// run appropriate git commands, etc
+
 package waypoint;
 
 public class Main {
