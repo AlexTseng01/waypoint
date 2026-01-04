@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-public class GraphMap<T> {
+public class GraphMap {
 	class Node {
-		T data;
+		long id;
+		String name;
 		List<Edge> edges;
-		Node(T data) {
-			this.data = data;
+		Node(long id, String name) {
+			this.name = name;
+			this.id = id;
 			this.edges = new ArrayList<>();
 		}
 	}
@@ -24,39 +26,67 @@ public class GraphMap<T> {
 		}
 	}
 	
-	private Map<T, Node> nodes;
+	// Stores all locations
+	private Map<Long, Node> nodes;
 	
+	// Constructor
 	public GraphMap() {
 		this.nodes = new HashMap<>();
 	}
 	
+	// Returns the number of locations
 	public int getSize() {return this.nodes.size();}
 	
-	public List<Edge> getEdges(T data) {return (this.nodes.get(data) != null) ? this.nodes.get(data).edges : null;}
+	// Returns the container for all edges for a specific node
+	public List<Edge> getEdges(long id) {return (this.nodes.get(id) != null) ? this.nodes.get(id).edges : null;}
 	
-	public Map<T, Node> getNodes() {return this.nodes;}
+	// Returns the container for all nodes
+	public Map<Long, Node> getNodes() {return this.nodes;}
 	
+	// Add edge using Nodes
 	public void addEdgeDirected(Node source, Node destination, double distance) {
 		source.edges.add(new Edge(destination, distance));
 	}
 	
+	// Add edge using Nodes
 	public void addEdgeUndirected(Node source, Node destination, double distance) {
 		source.edges.add(new Edge(destination, distance));
 		destination.edges.add(new Edge(source, distance));
 	}
 	
-	public void addNode(T data) {nodes.putIfAbsent(data, new Node(data));}
+	// Add edge using ID
+	public void addEdgeDirected(long source_id, long destination_id, double distance) {
+		Node source = nodes.get(source_id);
+		Node destination = nodes.get(destination_id);
+		if (source != null && destination != null) {
+			source.edges.add(new Edge(destination, distance));
+		}
+	}
 	
-	public Node removeNode(T data) {
-		Node nodeToRemove = new Node(data);
-		for (Map.Entry<T, Node> node : nodes.entrySet()) {
+	// Add edge using ID
+	public void addEdgeUndirected(long source_id, long destination_id, double distance) {
+		Node source = nodes.get(source_id);
+		Node destination = nodes.get(destination_id);
+		if (source != null && destination != null) {
+			source.edges.add(new Edge(destination, distance));
+			destination.edges.add(new Edge(source, distance));
+		}
+	}
+	
+	// Add a node
+	public void addNode(long id, String name) {nodes.putIfAbsent(id, new Node(id, name));}
+	
+	// Remove a node
+	public Node removeNode(long id) {
+		Node nodeToRemove = nodes.get(id);
+		if (nodeToRemove == null) return null;
+		for (Map.Entry<Long, Node> node : nodes.entrySet()) {
 			Node temp = node.getValue();
-			if (node == nodeToRemove) continue;
+			if (temp == nodeToRemove) continue;
 			temp.edges.removeIf(edge -> edge.target == nodeToRemove);
 		}
-		
 		nodeToRemove.edges.clear();
-		nodes.remove(data);
+		nodes.remove(id);
 		return nodeToRemove;
 	}
 }
